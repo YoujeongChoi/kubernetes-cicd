@@ -14,6 +14,7 @@ spec:
       labels:
         app:  istory
     spec:
+      # DB가 먼저 떠야 되기 때문
       initContainers:
         - name: check-mysql-ready
           image: mysql:8.0
@@ -29,11 +30,13 @@ spec:
       containers:
         - name:  istory
           image:  dangtong/istory
+          # EXPORT (설정파일)
           envFrom:
             - configMapRef:
                 name: istory-app-config
           env:
             - name: spring.datasource.password
+              # 패스워드는 secret
               valueFrom:
                 secretKeyRef:
                   name: istory-db-secret
